@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue AST抽象语法树</title>
+</head>
+
+<body>
+  <div id="app">
+    <span v-for="item in arr">{{item.name}} - {{item.age}}</span>
+  </div>
+  <script src="../dist/vue.js"></script>
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        ast: 'ast',
+        arr: [{ name: 'qzw', age: 18 }, { name: 'qzw-2', age: 19 },]
+      }
+    })
+
+    setTimeout(() => {
+      vm.arr.push({name: 'cyn', age: 20})
+    }, 1000)
+
+    const render = "with(this){return c('aaa',this)}"
+    const render2 = new Function(render)
+    console.log(render2)
+    render2.call({a: 1, c: console.log})
+  </script>
+</body>
+
+</html>
