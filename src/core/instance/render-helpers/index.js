@@ -12,6 +12,8 @@ import { bindObjectListeners } from './bind-object-listeners'
 import { resolveScopedSlots } from './resolve-scoped-slots'
 import { bindDynamicKeys, prependModifier } from './bind-dynamic-keys'
 
+// 定义render函数中使用的生成vnode的方法
+
 export function installRenderHelpers (target: any) {
   target._o = markOnce
   target._n = toNumber

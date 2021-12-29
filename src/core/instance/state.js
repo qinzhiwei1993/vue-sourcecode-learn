@@ -29,6 +29,7 @@ import {
   invokeWithErrorHandling
 } from '../util/index'
 
+// 对象描述符
 const sharedPropertyDefinition = {
   enumerable: true,
   configurable: true,
@@ -103,6 +104,7 @@ function initProps (vm: Component, propsOptions: Object) {
     // static props are already proxied on the component's prototype
     // during Vue.extend(). We only need to proxy props defined at
     // instantiation here.
+    // 代理props到实例vm上
     if (!(key in vm)) {
       proxy(vm, `_props`, key)
     }
@@ -185,6 +187,7 @@ function initComputed (vm: Component, computed: Object) {
 
     if (!isSSR) {
       // create internal watcher for the computed property.
+      // 每个计算属性对一个Watcher
       watchers[key] = new Watcher(
         vm,
         getter || noop,
@@ -215,6 +218,7 @@ export function defineComputed (
   key: string,
   userDef: Object | Function
 ) {
+  // 是否缓存计算结果，服务端渲染不缓存
   const shouldCache = !isServerRendering()
   if (typeof userDef === 'function') {
     sharedPropertyDefinition.get = shouldCache
@@ -245,9 +249,12 @@ function createComputedGetter (key) {
   return function computedGetter () {
     const watcher = this._computedWatchers && this._computedWatchers[key]
     if (watcher) {
+      // 首次读取执行
       if (watcher.dirty) {
+        // 运行watcher的回调函数
         watcher.evaluate()
       }
+      // 如果用作vue模板变量，那么渲染时负责渲染的watcher会收集computed相关属性的dep，且相关dep也会将负责渲染的watcher加入
       if (Dep.target) {
         watcher.depend()
       }

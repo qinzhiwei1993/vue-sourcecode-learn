@@ -18,6 +18,8 @@ import {
   defineReactive
 } from '../util/index'
 
+// 初始化 Vue全局api模块
+
 export function initGlobalAPI (Vue: GlobalAPI) {
   // config
   const configDef = {}

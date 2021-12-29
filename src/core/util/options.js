@@ -118,6 +118,7 @@ export function mergeDataOrFn (
   }
 }
 
+// 设置合并data方法
 strats.data = function (
   parentVal: any,
   childVal: any,
@@ -260,6 +261,8 @@ strats.provide = mergeDataOrFn
 
 /**
  * Default strategy.
+ *
+ * 默认策略: 优先使用传入的options
  */
 const defaultStrat = function (parentVal: any, childVal: any): any {
   return childVal === undefined
@@ -384,6 +387,8 @@ function assertObjectType (name: string, value: any, vm: ?Component) {
 /**
  * Merge two option objects into a new one.
  * Core utility used in both instantiation and inheritance.
+ *
+ * 合并两个options
  */
 export function mergeOptions (
   parent: Object,
@@ -422,7 +427,10 @@ export function mergeOptions (
   for (key in parent) {
     mergeField(key)
   }
+
+  // 遍历所有新的options
   for (key in child) {
+    // 如果原options不存在，则添加新的key
     if (!hasOwn(parent, key)) {
       mergeField(key)
     }

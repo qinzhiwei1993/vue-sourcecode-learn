@@ -28,7 +28,7 @@ export function initMixin (Vue: Class<Component>) {
 
     // a flag to avoid this being observed
     vm._isVue = true
-    // merge options
+    // merge options 合并options：data、methods、hooks....和mixin同理
     if (options && options._isComponent) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
@@ -45,6 +45,7 @@ export function initMixin (Vue: Class<Component>) {
     if (process.env.NODE_ENV !== 'production') {
       initProxy(vm)
     } else {
+      // 后续根据ast生成的render函数调用会使用该变量作为上下文this
       vm._renderProxy = vm
     }
     // expose real self
@@ -65,6 +66,7 @@ export function initMixin (Vue: Class<Component>) {
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
 
+    // 渲染
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }
@@ -91,6 +93,7 @@ export function initInternalComponent (vm: Component, options: InternalComponent
 }
 
 export function resolveConstructorOptions (Ctor: Class<Component>) {
+  // Ctor指向构造函数本身，也就是Vue
   let options = Ctor.options
   if (Ctor.super) {
     const superOptions = resolveConstructorOptions(Ctor.super)

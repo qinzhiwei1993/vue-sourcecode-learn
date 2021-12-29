@@ -15,10 +15,11 @@ export function initExtend (Vue: GlobalAPI) {
 
   /**
    * Class inheritance
+   *
    */
   Vue.extend = function (extendOptions: Object): Function {
     extendOptions = extendOptions || {}
-    const Super = this
+    const Super = this // 指向Vue
     const SuperId = Super.cid
     const cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = {})
     if (cachedCtors[SuperId]) {

@@ -48,6 +48,7 @@ const componentVNodeHooks = {
         vnode,
         activeInstance
       )
+      // 需要额外执行渲染，因为在实例化时没有el，所以无法调用$mount方法
       child.$mount(hydrating ? vnode.elm : undefined, hydrating)
     }
   },
@@ -118,6 +119,7 @@ export function createComponent (
 
   // if at this stage it's not a constructor or an async component factory,
   // reject.
+  // 如果不是构造函数或者异步工厂函数那么直接返回
   if (typeof Ctor !== 'function') {
     if (process.env.NODE_ENV !== 'production') {
       warn(`Invalid Component definition: ${String(Ctor)}`, context)
@@ -125,7 +127,7 @@ export function createComponent (
     return
   }
 
-  // async component
+  // async component  异步组件
   let asyncFactory
   if (isUndef(Ctor.cid)) {
     asyncFactory = Ctor
@@ -148,17 +150,20 @@ export function createComponent (
 
   // resolve constructor options in case global mixins are applied after
   // component constructor creation
+  // 如果在创建组件构造函数后应用全局mixin，则解析构造函数选项
+  // 同步子类和Vue的options
   resolveConstructorOptions(Ctor)
 
   // transform component v-model data into props & events
+  // 解析v-mode为props和events
   if (isDef(data.model)) {
     transformModel(Ctor.options, data)
   }
 
-  // extract props
+  // extract props 提取属性
   const propsData = extractPropsFromVNodeData(data, Ctor, tag)
 
-  // functional component
+  // functional component  函数组件
   if (isTrue(Ctor.options.functional)) {
     return createFunctionalComponent(Ctor, propsData, data, context, children)
   }
@@ -183,6 +188,7 @@ export function createComponent (
   }
 
   // install component management hooks onto the placeholder node
+  // 安装声明周期钩子
   installComponentHooks(data)
 
   // return a placeholder vnode
@@ -205,6 +211,7 @@ export function createComponent (
   return vnode
 }
 
+// 为vnode创建组件实例
 export function createComponentInstanceForVnode (
   // we know it's MountedComponentVNode but flow doesn't
   vnode: any,

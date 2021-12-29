@@ -44,6 +44,7 @@ export class Observer {
 
   constructor (value: any) {
     this.value = value
+    // 用于在使用$set和$del时触发更新机制
     this.dep = new Dep()
     this.vmCount = 0
     def(value, '__ob__', this) // 将观察者实例放在value的__ob__属性上， 可应用于判断该value是否被劫持，以及后续复用
@@ -168,8 +169,12 @@ export function defineReactive (
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
         dep.depend()
+        // child是对象或者数组
         if (childOb) {
+          // 对child本身依赖收集  用于在使用$set和$del时触发更新机制
           childOb.dep.depend()
+          // 如果是数组，所有数组元素都要收集依赖；因为页面渲染的时候，访问的是数组本身，
+          // 所以肯定是循环，但是数组的下标是没有被劫持的，所以所有子元素都要收集视图watcher。
           if (Array.isArray(value)) {
             dependArray(value)
           }
@@ -211,16 +216,23 @@ export function set (target: Array<any> | Object, key: any, val: any): any {
   ) {
     warn(`Cannot set reactive property on undefined, null, or primitive value: ${(target: any)}`)
   }
+
+  // 如果是数组，且下标已经存在于数组中，那么直接调用数组重写方法splice
   if (Array.isArray(target) && isValidArrayIndex(key)) {
     target.length = Math.max(target.length, key)
     target.splice(key, 1, val)
     return val
   }
+  // 如果是对象，且该key值已经存在与对象中，那么设置结果并返回。其实没有必要这么操作
   if (key in target && !(key in Object.prototype)) {
     target[key] = val
     return val
   }
+
+
   const ob = (target: any).__ob__
+  // data 应该只能是数据 - 不推荐观察拥有状态行为的对象
+  // 浏览器API创建的原生对象和原型上的property都会被忽略
   if (target._isVue || (ob && ob.vmCount)) {
     process.env.NODE_ENV !== 'production' && warn(
       'Avoid adding reactive properties to a Vue instance or its root $data ' +
@@ -228,11 +240,14 @@ export function set (target: Array<any> | Object, key: any, val: any): any {
     )
     return val
   }
+  // 如果target没有被劫持过，那么当做普通对象，直接赋值并返回结果
   if (!ob) {
     target[key] = val
     return val
   }
+  // 被劫持过，重新劫持新添加的属性
   defineReactive(ob.value, key, val)
+  // 劫持后出发更新通知
   ob.dep.notify()
   return val
 }

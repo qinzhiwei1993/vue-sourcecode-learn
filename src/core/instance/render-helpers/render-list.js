@@ -4,6 +4,10 @@ import { isObject, isDef, hasSymbol } from 'core/util/index'
 
 /**
  * Runtime helper for rendering v-for lists.
+ *
+ * v-for渲染解析vnode
+ *
+ * _l((arr),function(item){return _c('span',[_v(_s(item.name)+" - "+_s(item.age))])})
  */
 export function renderList (
   val: any,
