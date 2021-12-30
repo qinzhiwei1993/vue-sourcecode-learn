@@ -17,6 +17,10 @@ export const createCompiler = createCompilerCreator(function baseCompile (
     optimize(ast, options)
   }
   const code = generate(ast, options)
+  console.warn('========= 生成ast、静态优化、render函数 =============')
+  console.warn('ast', ast)
+  console.warn('render', code.render)
+  console.warn('========= 生成ast、静态优化、render函数 输出完毕 =============')
   return {
     ast,
     render: code.render,

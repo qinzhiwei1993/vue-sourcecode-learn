@@ -32,6 +32,7 @@ Vue.prototype.$mount = function (
   const options = this.$options
   // resolve template/el and convert to render function
   if (!options.render) {
+    console.warn('=========== 开始编译模板 =========', this._uid)
     let template = options.template
     if (template) {
       if (typeof template === 'string') {

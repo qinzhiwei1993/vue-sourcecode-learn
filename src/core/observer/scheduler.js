@@ -89,6 +89,7 @@ function flushSchedulerQueue () {
   for (index = 0; index < queue.length; index++) {
     watcher = queue[index]
     if (watcher.before) {
+      console.warn('========= 队列刷新前调用beforeUpdate钩子 ============', watcher.vm._uid)
       watcher.before()
     }
     id = watcher.id
@@ -134,6 +135,7 @@ function callUpdatedHooks (queue) {
     const watcher = queue[i]
     const vm = watcher.vm
     if (vm._watcher === watcher && vm._isMounted && !vm._isDestroyed) {
+      console.warn('========= 队列刷新后调用updated钩子 ============', vm._uid)
       callHook(vm, 'updated')
     }
   }
@@ -167,6 +169,7 @@ export function queueWatcher (watcher: Watcher) {
   if (has[id] == null) {
     has[id] = true
     if (!flushing) {
+      console.warn('=========== watcher进入刷新队列, 本次数据更新涉及到的watcher ========', watcher)
       queue.push(watcher)
     } else {
       // if already flushing, splice the watcher based on its id

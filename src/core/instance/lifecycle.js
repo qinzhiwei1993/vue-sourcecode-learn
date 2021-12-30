@@ -57,6 +57,7 @@ export function initLifecycle (vm: Component) {
 
 export function lifecycleMixin (Vue: Class<Component>) {
   // 渲染和更新视图方法
+  console.warn('======== lifecycleMixin =========')
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this
     const prevEl = vm.$el
@@ -86,6 +87,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     }
     // updated hook is called by the scheduler to ensure that children are
     // updated in a parent's updated hook.
+    console.warn('========= 页面挂载渲染完成并挂载 =========', vm._uid, vm.$el)
   }
 
   Vue.prototype.$forceUpdate = function () {

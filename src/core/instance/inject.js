@@ -13,10 +13,13 @@ export function initProvide (vm: Component) {
   }
 }
 
+// provide和inject默认不是响应的，这是刻意为之，但是如果传入的是一个已经监听的对象，当然可以是响应的
+// 用于跨组件使用
+
 export function initInjections (vm: Component) {
   const result = resolveInject(vm.$options.inject, vm)
   if (result) {
-    toggleObserving(false)
+    // toggleObserving(false) 关闭可响应劫持
     Object.keys(result).forEach(key => {
       /* istanbul ignore else */
       if (process.env.NODE_ENV !== 'production') {

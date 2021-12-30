@@ -14,22 +14,33 @@
     <p style="color: red;">我是静态节点</p>
     <p style="color: red;">计算属性{{ text }}</p>
     <p style="color: red;">{{ person.name }} - {{person.age}}</p>
-    <custom-component>444</custom-component>
+    <custom-component :name="person.name" :age="person.age" v-on:hello="hello">444</custom-component>
   </div>
   <script src="../dist/vue.js"></script>
   <script>
 
     Vue.component('custom-component', {
+      inject: ['name'],
+      props: {
+        name: String
+      },
       template: `
           <div>
-              我是自定义组件
+              我是自定义组件 {{name}}
           </div>
       `,
-      mounted(){
-        console.log('组件挂载到页面')
+      mounted() {
+        console.log('子组件渲染完成', this.name)
       },
-      beforeUpdate(){
-        console.log('即将更新--子组件')
+      beforeUpdate() {
+        console.log('子组件即将开始更新')
+      },
+      updated() {
+        // attrs 获取子组件为定义的，父组件传入的所有属性，不包括class和style
+        // listeners 获取父组件定义在组件上的事件监听器
+        // 二者都是在定义高级组件时使用
+        console.log('子组件更新完成', this.$attrs, this.$listeners)
+        this.$listeners.hello('qzw')
       }
     })
 
@@ -42,6 +53,9 @@
           name: 'qzw'
         }
       },
+      provide: {
+        name: 'this.person.name'
+      },
       computed: {
         text() {
           return this.ast
@@ -52,11 +66,20 @@
           console.log('hahah ast changed')
         }
       },
-      mounted(){
-        console.log('跟页面挂载')
+      mounted() {
+        console.log('根组件渲染完成')
+        // console.log('通过原型定义的$data方法获取实例上的data', this.$data)
       },
-      beforeUpdate(){
-        console.log('即将更新')
+      beforeUpdate() {
+        console.log('根组件即将渲染')
+      },
+      updated() {
+        console.log('根组件更新完成')
+      },
+      methods: {
+        hello(text) {
+          console.log('hello ' + text)
+        }
       }
     })
 

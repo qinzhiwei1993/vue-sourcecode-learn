@@ -64,6 +64,7 @@ export function initState (vm: Component) {
 }
 
 function initProps (vm: Component, propsOptions: Object) {
+  console.warn('========== 初始化props =========', vm._uid)
   const propsData = vm.$options.propsData || {}
   const props = vm._props = {}
   // cache prop keys so that future props updates can iterate using Array
@@ -72,6 +73,7 @@ function initProps (vm: Component, propsOptions: Object) {
   const isRoot = !vm.$parent
   // root instance props should be converted
   if (!isRoot) {
+    // 这里是默认关闭劫持的，因为在父组件的时候已经劫持过了。默认只需要劫持最外面一层的读取即可
     toggleObserving(false)
   }
   for (const key in propsOptions) {
@@ -113,6 +115,7 @@ function initProps (vm: Component, propsOptions: Object) {
 }
 
 function initData (vm: Component) {
+  console.warn('========== 初始化data =========', vm._uid)
   let data = vm.$options.data
   data = vm._data = typeof data === 'function'
     ? getData(data, vm)
@@ -170,6 +173,7 @@ export function getData (data: Function, vm: Component): any {
 const computedWatcherOptions = { lazy: true }
 
 function initComputed (vm: Component, computed: Object) {
+  console.warn('========== 初始化computed =========', vm._uid)
   // $flow-disable-line
   const watchers = vm._computedWatchers = Object.create(null)
   // computed properties are just getters during SSR
@@ -270,6 +274,7 @@ function createGetterInvoker(fn) {
 }
 
 function initMethods (vm: Component, methods: Object) {
+  console.warn('========== 初始化methods =========', vm._uid)
   const props = vm.$options.props
   for (const key in methods) {
     if (process.env.NODE_ENV !== 'production') {
@@ -298,6 +303,7 @@ function initMethods (vm: Component, methods: Object) {
 }
 
 function initWatch (vm: Component, watch: Object) {
+  console.warn('========== 初始化watch =========', vm._uid)
   for (const key in watch) {
     const handler = watch[key]
     if (Array.isArray(handler)) {
@@ -330,6 +336,7 @@ export function stateMixin (Vue: Class<Component>) {
   // flow somehow has problems with directly declared definition object
   // when using Object.defineProperty, so we have to procedurally build up
   // the object here.
+  console.warn('======== stateMixin =========')
   const dataDef = {}
   dataDef.get = function () { return this._data }
   const propsDef = {}

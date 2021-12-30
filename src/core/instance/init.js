@@ -13,9 +13,11 @@ import { extend, mergeOptions, formatComponentName } from '../util/index'
 let uid = 0
 
 export function initMixin (Vue: Class<Component>) {
+  console.warn('======== initMixin =========')
   Vue.prototype._init = function (options?: Object) {
     const vm: Component = this
     // a uid
+    // 每个实例都有唯一uid
     vm._uid = uid++
 
     let startTag, endTag
@@ -27,20 +29,24 @@ export function initMixin (Vue: Class<Component>) {
     }
 
     // a flag to avoid this being observed
+    // 避免被劫持的标识
     vm._isVue = true
     // merge options 合并options：data、methods、hooks....和mixin同理
     if (options && options._isComponent) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
       // internal component options needs special treatment.
+      // 优化内部组件实例化，因为动态的options合并非常慢，而且所有的内部组件的options不需要特殊处理
       initInternalComponent(vm, options)
     } else {
+
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
         options || {},
         vm
       )
     }
+    console.warn('=========== 合并完成options =========',vm._uid, vm.$options)
     /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
       initProxy(vm)
