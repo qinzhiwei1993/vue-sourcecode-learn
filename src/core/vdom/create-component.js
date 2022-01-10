@@ -53,6 +53,7 @@ const componentVNodeHooks = {
     }
   },
 
+  // 组件更新
   prepatch (oldVnode: MountedComponentVNode, vnode: MountedComponentVNode) {
     const options = vnode.componentOptions
     const child = vnode.componentInstance = oldVnode.componentInstance
@@ -175,12 +176,14 @@ export function createComponent (
   // so it gets processed during parent component patch.
   data.on = data.nativeOn
 
+  // 抽象组件 如keep-alive
   if (isTrue(Ctor.options.abstract)) {
     // abstract components do not keep anything
     // other than props & listeners & slot
 
     // work around flow
     const slot = data.slot
+    console.warn('======= keep-live 插槽=========', slot)
     data = {}
     if (slot) {
       data.slot = slot

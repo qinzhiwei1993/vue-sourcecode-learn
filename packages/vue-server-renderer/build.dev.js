@@ -6861,6 +6861,7 @@ var ALWAYS_NORMALIZE = 2;
 
 // wrapper function for providing a more flexible interface
 // without getting yelled at by flow
+// _render函数中用于解析生成vnode
 function createElement (
   context,
   tag,
@@ -6948,7 +6949,10 @@ function _createElement (
       );
     } else if ((!data || !data.pre) && isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
       // component
+      // 解析组件
+
       vnode = createComponent(Ctor, data, context, children, tag);
+      // console.warn('============ 组件解析 ==========', vnode)
     } else {
       // 未知标签
       // unknown or unlisted namespaced elements
@@ -7906,7 +7910,10 @@ function createFunctionalComponent (
     Ctor
   );
 
+  console.warn('======= 函数式组件上下文 renderContext ===========', renderContext);
+
   var vnode = options.render.call(null, renderContext._c, renderContext);
+  console.warn('======== 函数式生成的vnode ==========', vnode);
 
   if (vnode instanceof VNode) {
     return cloneAndMarkFunctionalResult(vnode, data, renderContext.parent, options, renderContext)
@@ -7965,6 +7972,7 @@ var componentVNodeHooks = {
     }
   },
 
+  // 组件更新
   prepatch: function prepatch (oldVnode, vnode) {
     var options = vnode.componentOptions;
     var child = vnode.componentInstance = oldVnode.componentInstance;
@@ -8088,12 +8096,14 @@ function createComponent (
   // so it gets processed during parent component patch.
   data.on = data.nativeOn;
 
+  // 抽象组件 如keep-alive
   if (isTrue(Ctor.options.abstract)) {
     // abstract components do not keep anything
     // other than props & listeners & slot
 
     // work around flow
     var slot = data.slot;
+    console.warn('======= keep-live 插槽=========', slot);
     data = {};
     if (slot) {
       data.slot = slot;

@@ -226,7 +226,7 @@ export function createPatchFunction (backend) {
       // in that case we can just return the element and be done.
       if (isDef(vnode.componentInstance)) {
         initComponent(vnode, insertedVnodeQueue)
-
+        // console.warn('============== 组件渲染 ==========', vnode, vnode.elm, parentElm)
         insert(parentElm, vnode.elm, refElm)
         if (isTrue(isReactivated)) {
           reactivateComponent(vnode, insertedVnodeQueue, parentElm, refElm)
@@ -277,6 +277,7 @@ export function createPatchFunction (backend) {
     insert(parentElm, vnode.elm, refElm)
   }
 
+  // 节点插入
   function insert (parent, elm, ref) {
     if (isDef(parent)) {
       if (isDef(ref)) {

@@ -25,6 +25,7 @@ const ALWAYS_NORMALIZE = 2
 
 // wrapper function for providing a more flexible interface
 // without getting yelled at by flow
+// _render函数中用于解析生成vnode
 export function createElement (
   context: Component,
   tag: any,
@@ -112,7 +113,10 @@ export function _createElement (
       )
     } else if ((!data || !data.pre) && isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
       // component
+      // 解析组件
+
       vnode = createComponent(Ctor, data, context, children, tag)
+      // console.warn('============ 组件解析 ==========', vnode)
     } else {
       // 未知标签
       // unknown or unlisted namespaced elements

@@ -14,7 +14,10 @@
     <p style="color: red;">我是静态节点</p>
     <p style="color: red;">计算属性{{ text }}</p>
     <p style="color: red;">{{ person.name }} - {{person.age}}</p>
-    <custom-component :name="person.name" :age="person.age" v-on:hello="hello">444</custom-component>
+    <keep-alive>
+      <custom-component :name="person.name" :age="person.age" v-on:hello="hello">444</custom-component>
+    </keep-alive>
+    <functional-component :name="person.name"></functional-component>
   </div>
   <script src="../dist/vue.js"></script>
   <script>
@@ -27,10 +30,17 @@
       template: `
           <div>
               我是自定义组件 {{name}}
+              子组件child - {{child}}
           </div>
       `,
+      data(){
+        return {
+          child: 'child'
+        }
+      },
       mounted() {
         console.log('子组件渲染完成', this.name)
+        this.child = 'child - change'
       },
       beforeUpdate() {
         console.log('子组件即将开始更新')
@@ -44,6 +54,25 @@
       }
     })
 
+    // 函数式组件
+    Vue.component('functional-component', {
+      functional: true, // 显示定义函数式组件
+      // 如果函数式组件没有定义props，那么会隐式自动转换父组件传入的所有props
+      // props: {
+      //   name: String
+      // },
+      // 由于没有实例化，所以没有this实例，也没有data 只有props从父组件获取的
+      // data(){
+      //   return {
+      //     name: 'functional-component'
+      //   }
+      // },
+      render: function(createElement, context){
+        // console.log('============ 函数是组件上下文 ==========', context, createElement)
+        const props = context.props
+        return createElement('h1', props.name)
+      }
+    })
     const vm = new Vue({
       el: '#app',
       data: {

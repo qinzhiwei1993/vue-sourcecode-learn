@@ -118,7 +118,10 @@ export function createFunctionalComponent (
     Ctor
   )
 
+  console.warn('======= 函数式组件上下文 renderContext ===========', renderContext)
+
   const vnode = options.render.call(null, renderContext._c, renderContext)
+  console.warn('======== 函数式生成的vnode ==========', vnode)
 
   if (vnode instanceof VNode) {
     return cloneAndMarkFunctionalResult(vnode, data, renderContext.parent, options, renderContext)
