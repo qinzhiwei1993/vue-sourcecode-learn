@@ -10,6 +10,7 @@
 
 <body>
   <div id="app">
+    <input v-focus />
     <p v-for="item in arr">{{item.name}} - {{item.age}}</p>
     <p style="color: red;">我是静态节点</p>
     <p style="color: red;">计算属性{{ text }}</p>
@@ -22,6 +23,14 @@
   <script src="../dist/vue.js"></script>
   <script>
 
+    Vue.directive('focus', {
+      // 当被绑定的元素插入到 DOM 中时……
+      inserted: function (el) {
+        // 聚焦元素
+        el.focus()
+      }
+    })
+
     Vue.component('custom-component', {
       inject: ['name'],
       props: {
@@ -33,7 +42,7 @@
               子组件child - {{child}}
           </div>
       `,
-      data(){
+      data() {
         return {
           child: 'child'
         }
@@ -67,7 +76,7 @@
       //     name: 'functional-component'
       //   }
       // },
-      render: function(createElement, context){
+      render: function (createElement, context) {
         // console.log('============ 函数是组件上下文 ==========', context, createElement)
         const props = context.props
         return createElement('h1', props.name)
