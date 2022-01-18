@@ -15,6 +15,7 @@
     <p style="color: red;">我是静态节点</p>
     <p style="color: red;">计算属性{{ text }}</p>
     <p style="color: red;">{{ person.name }} - {{person.age}}</p>
+    <p style="color: red;" v-once>v-once {{ person.name }}</p>
     <keep-alive>
       <custom-component :name="person.name" :age="person.age" v-on:hello="hello">444</custom-component>
     </keep-alive>
